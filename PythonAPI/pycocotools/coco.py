@@ -61,6 +61,7 @@ if PYTHON_VERSION == 2:
 elif PYTHON_VERSION == 3:
     from urllib.request import urlretrieve
 
+
 def _isArrayLike(obj):
     return hasattr(obj, '__iter__') and hasattr(obj, '__len__')
 
@@ -240,11 +241,6 @@ class COCO:
         :param anns (array of object): annotations to display
         :return: None
         """
-        
-        import matplotlib.pyplot as plt
-        from matplotlib.collections import PatchCollection
-        from matplotlib.patches import Polygon
-        
         if len(anns) == 0:
             return 0
         if 'segmentation' in anns[0] or 'keypoints' in anns[0]:
@@ -254,6 +250,10 @@ class COCO:
         else:
             raise Exception('datasetType not supported')
         if datasetType == 'instances':
+            import matplotlib.pyplot as plt
+            from matplotlib.collections import PatchCollection
+            from matplotlib.patches import Polygon
+
             ax = plt.gca()
             ax.set_autoscale_on(False)
             polygons = []
@@ -323,7 +323,8 @@ class COCO:
         print('Loading and preparing results...')
         tic = time.time()
         if type(resFile) == str:
-            anns = json.load(open(resFile))
+            with open(resFile) as f:
+                anns = json.load(f)
         elif type(resFile) == np.ndarray:
             anns = self.loadNumpyAnnotations(resFile)
         else:

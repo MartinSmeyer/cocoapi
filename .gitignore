@@ -19,3 +19,4 @@ PythonAPI/pycocotools/_mask.cpython-36m-x86_64-linux-gnu.so
 PythonAPI/build
 PythonAPI/dist
 PythonAPI/pycocotools.egg-info
+.idea/
