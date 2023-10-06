@@ -1,5 +1,6 @@
 __author__ = 'tsungyi'
-
+import os
+import warnings
 import numpy as np
 import datetime
 import time
@@ -86,6 +87,11 @@ class COCOeval:
         Prepare ._gts and ._dts for evaluation based on params
         :return: None
         '''
+        COCOAPI_ISCROWD_AS_IGNORE = int(os.environ.get("COCOAPI_ISCROWD_AS_IGNORE", 0))
+        if COCOAPI_ISCROWD_AS_IGNORE == 0:
+            warnings.warn("BOP uses COCOAPI_ISCROWD_AS_IGNORE=0, set it to 1 if you want to evaluate as the oringinal COCOAPI")
+        else:
+            warnings.warn("Using COCOAPI_ISCROWD_AS_IGNORE, set it to 0 if you want to evaluate BOP detections")
         def _toMask(anns, coco):
             # modify ann['segmentation'] by reference
             for ann in anns:
@@ -106,7 +112,12 @@ class COCOeval:
         # set ignore flag
         for gt in gts:
             gt['ignore'] = gt['ignore'] if 'ignore' in gt else 0
-            gt['iscrowd'] = 'iscrowd' in gt and gt['iscrowd']
+            if COCOAPI_ISCROWD_AS_IGNORE == 0:
+                # bop style, default in this repo
+                gt['iscrowd'] = 'iscrowd' in gt and gt['iscrowd']
+            else:
+                # original coco style
+                gt['ignore'] = 'iscrowd' in gt and gt['iscrowd']
             if p.iouType == 'keypoints':
                 gt['ignore'] = (gt['num_keypoints'] == 0) or gt['ignore']
         self._gts = defaultdict(list)       # gt for evaluation
