@@ -1,0 +1,19 @@
+[build-system]
+requires = [
+    "setuptools>=18.0",
+    "cython>=0.27.3",
+    "numpy>=1.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pycocotools"
+version = "2.0"
+requires-python = ">=3.7"
+dependencies = [
+    "numpy>=1.0",
+]
+
+[tool.setuptools]
+packages = ["pycocotools"]
+package-dir = {"pycocotools" = "pycocotools"}
